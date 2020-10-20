@@ -1,1 +1,20 @@
 Linux_commands
+
+-- Check Apache process
+
+-- Check Apache logs
+
+
+-- Check Autosys jobs
+
+
+-- Set profile shortcut/alias
+Bash – ~/.bashrc
+
+$ alias               -- to see list of defined alias
+
+alias ll="ls -alF"    -- add to profile
+
+$ source ~/.bashrc    -- enable in current session
+
+
