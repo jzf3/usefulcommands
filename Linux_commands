@@ -1,5 +1,6 @@
 Linux_commands
 
+-- APACHE
 -- Check Apache process
 $ systemctl status httpd	  #RHEL
 or
@@ -9,9 +10,12 @@ $ apachectl status          # yum install links		#RHEL
 /var/log/httpd/error_log    #RHEL / Red Hat
 
 
+-- AUTOSYS/CRON
 -- Check Autosys jobs
+ls -la /etc/cron.d
 
 
+-- UNIX
 -- Set profile shortcut/alias
 Bash – ~/.bashrc
 
@@ -20,5 +24,19 @@ $ alias               #to see list of defined alias
 alias ll="ls -alF"    #add to profile
 
 $ source ~/.bashrc    #enable in current session
+
+-- sudo to root
+sudo - s
+
+-- uname
+uname -a
+
+-- netstatus
+netstat -antup
+
+-- any root process
+ps -aux | grep root
+
+
 
 
