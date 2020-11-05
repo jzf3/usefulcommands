@@ -1,1 +1,132 @@
 List of Oracle commands
+
+-- SQLS
+-- table size, one table
+select segment_name,segment_type,bytes/1024/1024 MB
+ from dba_segments
+ where segment_type='TABLE' and segment_name='<yourtablename>';
+ 
+-- table size, list of tables
+ select segment_name,segment_type,bytes/1024/1024 MB
+ from dba_segments
+ where segment_type in ('TABLE', 'TABLE PARTITION') 
+ and segment_name in 
+ (select table_name
+from dba_tables
+where num_rows > 10000)
+order by segment_type, segment_name, bytes desc;
+
+-- find constraints for a table
+https://docs.oracle.com/cd/B19306_01/server.102/b14237/statviews_1037.htm#i1576022
+Type of constraint definition:
+C (check constraint on a table)
+P (primary key)
+U (unique key)
+R (referential integrity)
+V (with check option, on a view)
+O (with read only, on a view)
+
+SELECT DISTINCT table_name, 
+                constraint_name, 
+                column_name, 
+                r_table_name, 
+                position, 
+                constraint_type 
+FROM   (SELECT uc.table_name, 
+               uc.constraint_name, 
+               cols.column_name, 
+               (SELECT table_name 
+                FROM   user_constraints 
+                WHERE  constraint_name = uc.r_constraint_name) r_table_name, 
+               (SELECT column_name 
+                FROM   user_cons_columns 
+                WHERE  constraint_name = uc.r_constraint_name 
+                       AND position = cols.position)           r_column_name, 
+               cols.position, 
+               uc.constraint_type 
+        FROM   user_constraints uc 
+               inner join user_cons_columns cols 
+                       ON uc.constraint_name = cols.constraint_name 
+        WHERE  constraint_type != 'C') 
+START WITH table_name = 'FACILITIES' 
+           AND column_name = 'ID_N' 
+CONNECT BY NOCYCLE PRIOR table_name = r_table_name 
+                         AND PRIOR column_name = r_column_name
+                         order by 1, 3; 
+-- enable and disable a table constraints
+https://stackoverflow.com/questions/128623/disable-all-table-constraints-in-oracle/131595
+
+
+-- LOGS
+(note: my_log is a procedure to insert log into my_logs table) 
+-- My_logs table
+PROCESS_NAME	VARCHAR2(200 BYTE)
+LOG_MESSAGE	CLOB
+CREATE_DT	DATE DEFAULT SYSDATE NOT NULL ENABLE
+-- My_log procedure
+CREATE OR REPLACE PROCEDURE MY_LOG
+(
+  PROC_NAME IN VARCHAR2 
+, LOG_MSG IN  CLOB
+) AS 
+BEGIN
+  INSERT INTO MY_LOGS (PROCESS_NAME, LOG_MESSAGE)
+  VALUES (upper(PROC_NAME), LOG_MSG);
+END MY_LOG;
+
+
+-- ERRORS
+-- to catch column err
+EXCEPTION
+WHEN NO_DATA_FOUND THEN
+  my_log('prog_name','NO DATA FOUND');
+WHEN OTHERS THEN
+  my_log('prog_name','Exception error for : ' || sqlerrm || ' at ' || DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
+  retval := 0;
+
+-- SUBPROGRAM/TESTING
+-- to test list of table values
+select * FROM TABLE (CAST(subtaskTypes AS VARCHAR_TBL))
+1. write a cursor
+2. write each record into my_log
+-- example
+tempString varchar2(4000);
+CURSOR c_test IS SELECT * FROM TABLE (CAST(subtaskTypes AS VARCHAR_TBL)); 
+   OPEN c_test; 
+   LOOP 
+   FETCH c_test into tempString; 
+      EXIT WHEN c_test%notfound; 
+      my_log ('prog_name', ' subtaskTypes: ' || tempString );
+   END LOOP; 
+CLOSE c_test; 
+
+-- RELEASES
+---------------------------------------------------------------------------
+Title: 			
+Jira #:  		
+Release Dates:
+	Develop:	2018-01-11
+	Testing:
+	Production:
+	Version: 	(e.g. 1.1.0.0)
+---------------------------------------------------------------------------
+*** Part I: PHP, JavaScripts, Ajax, Json Codes Changes ***
+(backup existing files, get latest files from SVN branch)
+
+app/root/<code-name>.php
+(other files)
+
+---------------------------------------------------------------------------
+*** Part II: Database Changes ***
+(get the objects from CEDAR DEV branch, order changes in order to compile objects)
+TABLES
+PACKAGES
+SQLS
+RUNS
+-- ^^^ Release Version (e.g. 1.1.0.0)
+
+-- MISC
+-- Prevent "Comparing Subrograms" during Package Editing in SqlDeveloper
+http://www.databaseusers.com/article/6011344/Prevent+%22Comparing+Subrograms%22+during+Package+Editing%3F
+Disabling "Supported Gutter Navigation" fixed the issue for me (Tools > Preferences > Code Editor: unchecked "Supported Gutter Navigation"). 
+
