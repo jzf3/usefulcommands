@@ -56,6 +56,18 @@ CONNECT BY NOCYCLE PRIOR table_name = r_table_name
 -- enable and disable a table constraints
 https://stackoverflow.com/questions/128623/disable-all-table-constraints-in-oracle/131595
 
+-- search a table column used in packages
+select * from user_source
+where upper(text) like upper('%COL NAME%');
+
+-- search exact column
+SELECT *
+  FROM user_source
+ WHERE regexp_like(text, '(\s|\.|,|^)bqr(\s|,|$)');
+This is the regular expression to find this column and exclude the other columns with "BQR" as part of the name:
+(\s|\.|,|^)bqr(\s|,|$)
+The regular expression matches white-space (\s), or (|) period (.), or (|) comma (,), or (|) start-of-line (^), followed by "bqr", followed by white-space, comma or end-of-line ($).
+
 
 -- LOGS
 (note: my_log is a procedure to insert log into my_logs table) 
@@ -130,3 +142,32 @@ RUNS
 http://www.databaseusers.com/article/6011344/Prevent+%22Comparing+Subrograms%22+during+Package+Editing%3F
 Disabling "Supported Gutter Navigation" fixed the issue for me (Tools > Preferences > Code Editor: unchecked "Supported Gutter Navigation"). 
 
+
+Var r refcursor
+exec  GetCustomer(:r, 'John', '')
+print r
+
+-- test a cursor output
+var r1 refcursor;
+declare
+r integer;
+begin
+ user_pkg.my_tasks(67, r, :r1);
+end;
+/
+print r1;
+
+-- DBA
+select GRANTEE from dba_role_privs where granted_role = 'USER' order by 1;
+
+-- acl
+SELECT PRINCIPAL, HOST, lower_port, upper_port, acl, 'connect' AS PRIVILEGE 
+--    DECODE(DBMS_NETWORK_ACL_ADMIN.CHECK_PRIVILEGE_ACLID(aclid, PRINCIPAL, 'connect'), 1,'GRANTED', 0,'DENIED', NULL) PRIVILEGE_STATUS
+FROM DBA_NETWORK_ACLS
+    JOIN DBA_NETWORK_ACL_PRIVILEGES USING (ACL, ACLID)  
+UNION ALL
+SELECT PRINCIPAL, HOST, NULL lower_port, NULL upper_port, acl, 'resolve' AS PRIVILEGE
+--DECODE(DBMS_NETWORK_ACL_ADMIN.CHECK_PRIVILEGE_ACLID(aclid, PRINCIPAL, 'resolve'), 1,'GRANTED', 0,'DENIED', NULL) PRIVILEGE_STATUS
+FROM DBA_NETWORK_ACLS
+    JOIN DBA_NETWORK_ACL_PRIVILEGES USING (ACL, ACLID);
+    
