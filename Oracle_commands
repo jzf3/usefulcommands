@@ -171,3 +171,33 @@ SELECT PRINCIPAL, HOST, NULL lower_port, NULL upper_port, acl, 'resolve' AS PRIV
 FROM DBA_NETWORK_ACLS
     JOIN DBA_NETWORK_ACL_PRIVILEGES USING (ACL, ACLID);
     
+-- DBMS Jobs
+-- drop current job
+BEGIN
+ DBMS_SCHEDULER.DROP_JOB ('DLY_PURGE');
+END;
+/
+
+-- schedule a job
+BEGIN
+ DBMS_SCHEDULER.CREATE_JOB (
+  job_name           =>  'DLY_PURGE',
+  job_type           =>  'STORED_PROCEDURE',
+  job_action         =>  'MY_DAILY.PURGE_INACTIVE_DATA',
+  start_date         =>  '01-DEC-10 11.50.00 AM GMT',    /* update the date you want */
+  repeat_interval    =>  'FREQ=DAILY;INTERVAL=1', 	/* every day */
+  enabled            =>  TRUE,
+  auto_drop          =>  TRUE,
+  job_class          =>  'DEFAULT_JOB_CLASS',
+  comments           =>  'dly proc to purge inactive data');
+END;
+/
+
+-- monitor job
+SELECT * from DBA_SCHEDULER_JOBS where owner = 'ME' and JOB_NAME = 'DLY_PURGE_INACTIVE_DATA';
+SELECT * FROM dba_scheduler_running_jobs WHERE JOB_NAME = 'DLY_PURGE_INACTIVE_DATA';
+SELECT * FROM dba_scheduler_job_run_details WHERE JOB_NAME = 'DLY_PURGE_INACTIVE_DATA';
+
+
+
+    
