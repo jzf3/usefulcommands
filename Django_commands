@@ -4,18 +4,32 @@ right click pkg file to start Python Installer, follow the instruction
 phthon will be installed in Applications directory, /Applications/Python 3.9
 double click Install Certification icon in the Finder window to install certification (required)
 type python to verify version
-python --version
+$ python --version
 PATH=/bin:/usr/bin:/usr/local/bin:${PATH}
 export PATH
 
 -- venv
-cd to my directory and create venv
+- cd to my directory and create venv
+$ python3 -m venv tutorial-env
+active venv
+$ source tutorial-env/bin/activate
+run your version
+$ pathon
+>>> import sys
+>>> sys.path
+
+-- pip installation (already included in python)
+$ python -m pip --version (pip 20.2.3 from /Users/..)
+$ pip list (list all packages installed)
+$ (tutorial-env) $ pip freeze > requirements.txt
+$ (tutorial-env) $ cat requirements.txt
+$ python -m pip install -r requirements.txt (install required packages when release)
+
+-- install django
+$ python -m django --version (3.1.5, check current version)
+$ python -m pip install Django (install if need)
+$ python
+>>> import django
+>>> print(django.get_version()) (verify version is 3.1.5)
 
 
-
-
--- pip installation (included)
-
-
-
-$ python -m django --version
