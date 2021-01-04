@@ -1,0 +1,21 @@
+-- python install mac
+download latest python
+right click pkg file to start Python Installer, follow the instruction
+phthon will be installed in Applications directory, /Applications/Python 3.9
+double click Install Certification icon in the Finder window to install certification (required)
+type python to verify version
+python --version
+PATH=/bin:/usr/bin:/usr/local/bin:${PATH}
+export PATH
+
+-- venv
+cd to my directory and create venv
+
+
+
+
+-- pip installation (included)
+
+
+
+$ python -m django --version
