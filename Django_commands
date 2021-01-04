@@ -32,4 +32,18 @@ $ python
 >>> import django
 >>> print(django.get_version()) (verify version is 3.1.5)
 
+-- create django project
+$ django-admin startproject mysite
+mysite/
+    manage.py (command-line utility)
+    mysite/
+        __init__.py (Python package indicator)
+        settings.py (Django config)
+        urls.py (Django project url)
+        asgi.py (ASGI-compatible web servers)
+        wsgi.py (WSGI-compatible web servers)
+        
+        
+        
+
 
