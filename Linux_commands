@@ -1,5 +1,10 @@
 Linux_commands
 
+-- OS and version 
+cat /etc/os-release
+or
+hostnamectl
+
 -- APACHE
 -- Check Apache process
 $ systemctl status httpd	  #RHEL
