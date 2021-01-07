@@ -31,7 +31,7 @@ alias ll="ls -alF"    #add to profile
 $ source ~/.bashrc    #enable in current session
 
 -- sudo to root
-sudo - s
+sudo -s
 sudo <command>
 su root -c <command>
 
