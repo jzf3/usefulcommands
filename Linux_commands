@@ -32,6 +32,10 @@ $ source ~/.bashrc    #enable in current session
 
 -- sudo to root
 sudo - s
+sudo <command>
+su root -c <command>
+
+
 
 -- uname
 uname -a
@@ -41,6 +45,10 @@ netstat -antup
 
 -- any root process
 ps -aux | grep root
+
+-- check disk space
+df or df -ah -- overall 
+
 
 
 
