@@ -198,6 +198,21 @@ SELECT * from DBA_SCHEDULER_JOBS where owner = 'ME' and JOB_NAME = 'DLY_PURGE_IN
 SELECT * FROM dba_scheduler_running_jobs WHERE JOB_NAME = 'DLY_PURGE_INACTIVE_DATA';
 SELECT * FROM dba_scheduler_job_run_details WHERE JOB_NAME = 'DLY_PURGE_INACTIVE_DATA';
 
+-- monitor sessions
+V$SESSION_BLOCKERS displays the blocker sessions for each blocked session. Each row represents a blocked and blocker session pair. If a session is blocked by multiple sessions there will be multiple rows for that blocked session. 
 
+SELECT NVL(s.username, '(oracle)') AS username,
+       s.sid,
+       s.serial#,
+       sw.event,
+       sw.wait_class,
+       sw.wait_time,			-- 0 currently waiting,> 0 - Value is the duration of the last wait in hundredths of a second, -1 - Duration of the last wait was less than a hundredth of a second, -2 - Parameter TIMED_STATISTICS was set to false
+       sw.seconds_in_wait,
+       sw.state
+FROM   v$session_wait sw,
+       v$session s
+WHERE  s.sid = sw.sid
+AND    SECONDS_IN_WAIT > 600		-- 10 min
+ORDER BY sw.seconds_in_wait DESC;
 
     
