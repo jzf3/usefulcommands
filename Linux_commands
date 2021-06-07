@@ -49,6 +49,14 @@ ps -aux | grep root
 -- check disk space
 df or df -ah -- overall 
 
+-- search a text under current directory
+grep -r '.' -e '<text>'
+-e is the pattern used during the search
+-r or -R is recursive
+
+
+
+
 
 
 
