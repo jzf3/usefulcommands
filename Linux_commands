@@ -55,6 +55,8 @@ grep -r '.' -e '<text>'
 -r or -R is recursive
 
 
+-- find
+find . -name ldap
 
 
 
