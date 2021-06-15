@@ -58,7 +58,9 @@ grep -r '.' -e '<text>'
 -- find
 find . -name ldap
 
-
+-- trace 
+# yum install strace		#RHEL/CentOS
+strace  -o /tmp/my_trace.txt ./app  // trace oracle client
 
 
 
